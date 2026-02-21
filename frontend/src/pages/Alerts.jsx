@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -63,27 +64,28 @@ const Alerts = () => {
   };
 
   const handleResolve = async () => {
-  if (!selectedAlert) return;
+    if (!selectedAlert) return;
 
-  setResolving(true);
-  try {
-    await resolveAlertManual(selectedAlert.id || selectedAlert.alertId);
-    // Update local state
-    setAlerts(
-      alerts.map((a) =>
-        (a.id || a.alertId) === (selectedAlert.id || selectedAlert.alertId)
-          ? { ...a, status: "RESOLVED" }
-          : a
-      )
-    );
-    setSelectedAlert({ ...selectedAlert, status: "RESOLVED" });
-  } catch (err) {
-    console.error("Failed to resolve alert:", err);
-    alert("Failed to resolve alert. Please try again.");
-  } finally {
-    setResolving(false);
-  }
-};
+    setResolving(true);
+    try {
+      await resolveAlertManual(selectedAlert.id || selectedAlert.alertId);
+      // Update local state
+      setAlerts(
+        alerts.map((a) =>
+          (a.id || a.alertId) === (selectedAlert.id || selectedAlert.alertId)
+            ? { ...a, status: "RESOLVED" }
+            : a
+        )
+      );
+      setSelectedAlert({ ...selectedAlert, status: "RESOLVED" });
+      toast.success("Alert resolved successfully");
+    } catch (err) {
+      console.error("Failed to resolve alert:", err);
+      toast.error("Failed to resolve alert. Please try again.");
+    } finally {
+      setResolving(false);
+    }
+  };
   const filteredAlerts = alerts.filter(
     (alert) =>
       (alert.id || alert.alertId || "")
@@ -224,7 +226,7 @@ const Alerts = () => {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-150">
           {selectedAlert && (
             <>
               <DialogHeader>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -35,7 +36,9 @@ const Dashboard = () => {
       setTopDrivers(driversRes.data)
       setRecentEvents(eventsRes.data)
     } catch (err) {
-      setError(err.message || "Failed to load dashboard data")
+      const errorMessage = err.message || "Failed to load dashboard data"
+      setError(errorMessage)
+      toast.error(errorMessage)
       console.error("Dashboard fetch error:", err)
     } finally {
       setLoading(false)
@@ -127,7 +130,7 @@ const Dashboard = () => {
           <CardHeader>
             <CardTitle>Trend Over Time</CardTitle>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-75">
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 <Skeleton className="h-full w-full" />

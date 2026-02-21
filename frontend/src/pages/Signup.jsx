@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,7 +12,6 @@ const Signup = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
   const handleInputChange = (e) => {
@@ -22,7 +22,6 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-    setError(null)
 
     try {
       const response = await signup(formData)
@@ -30,10 +29,11 @@ const Signup = () => {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token)
       }
+      toast.success("Account created successfully! Welcome aboard.")
       // Navigate to dashboard on success
       navigate("/dashboard")
     } catch (err) {
-      setError(err.message || "Signup failed. Please try again.")
+      toast.error(err.message || "Signup failed. Please try again.")
       console.error("Signup error:", err)
     } finally {
       setIsLoading(false)
@@ -60,11 +60,6 @@ const Signup = () => {
         
         <form onSubmit={handleSignup}>
           <CardContent className="grid gap-4 px-8 py-4">
-            {error && (
-              <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
-                {error}
-              </div>
-            )}
             <div className="grid gap-2">
               <Label htmlFor="name" className="text-zinc-700 dark:text-zinc-300">Full Name</Label>
               <Input 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { toast } from "sonner"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -22,7 +23,9 @@ const Configuration = () => {
       const response = await getRulesConfig()
       setRules(response.data)
     } catch (err) {
-      setError(err.message || "Failed to fetch rules configuration")
+      const errorMessage = err.message || "Failed to fetch rules configuration"
+      setError(errorMessage)
+      toast.error(errorMessage)
       console.error("Rules fetch error:", err)
     } finally {
       setLoading(false)

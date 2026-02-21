@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,7 +12,6 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
   const handleInputChange = (e) => {
@@ -22,7 +22,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-    setError(null)
 
     try {
       const response = await login(formData)
@@ -30,10 +29,11 @@ const Login = () => {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token)
       }
+      toast.success("Login successful! Welcome back.")
       // Navigate to dashboard on success
       navigate("/dashboard")
     } catch (err) {
-      setError(err.message || "Login failed. Please check your credentials.")
+      toast.error(err.message || "Login failed. Please check your credentials.")
       console.error("Login error:", err)
     } finally {
       setIsLoading(false)
@@ -60,11 +60,6 @@ const Login = () => {
         
         <form onSubmit={handleLogin}>
           <CardContent className="grid gap-4 px-8 py-4">
-            {error && (
-              <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
-                {error}
-              </div>
-            )}
             <div className="grid gap-2">
               <Label htmlFor="email" className="text-zinc-700 dark:text-zinc-300">Email</Label>
               <Input 
