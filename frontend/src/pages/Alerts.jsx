@@ -267,7 +267,7 @@ const Alerts = () => {
                   <History className="h-4 w-4" /> State Transition Timeline
                 </h4>
                 <div className="relative border-l border-slate-200 dark:border-slate-800 ml-3 space-y-6">
-                  {selectedAlert.history.map((evt, idx) => (
+                  {selectedAlert.history?.map((evt, idx) => (
                     <div key={idx} className="pl-6 relative">
                       <div className="absolute w-3 h-3 bg-blue-500 rounded-full -left-[6.5px] top-1 ring-4 ring-white dark:ring-slate-950" />
                       <div className="flex flex-col">
