@@ -48,7 +48,7 @@ const Login = () => {
             <div className="h-8 w-8 bg-zinc-900 dark:bg-zinc-50 rounded flex items-center justify-center">
               <ShieldCheck className="h-5 w-5 text-zinc-50 dark:text-zinc-900" />
             </div>
-            <span className="font-bold tracking-tight text-zinc-900 dark:text-zinc-50">MoveInSync</span>
+            <span className="font-bold tracking-tight text-zinc-900 dark:text-zinc-50">AERS - Alert Escalation Resolution System</span>
           </div>
           <CardTitle className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Welcome back

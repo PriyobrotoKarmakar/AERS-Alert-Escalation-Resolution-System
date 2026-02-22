@@ -6,6 +6,7 @@ import Alerts from '@/pages/Alerts'
 import Configuration from '@/pages/Configuration'
 import Login from '@/pages/Login'
 import Signup from '@/pages/Signup'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 function App() {
   return (
@@ -15,7 +16,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           
-          <Route path="/" element={<DashboardLayout />}>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="alerts" element={<Alerts />} />
