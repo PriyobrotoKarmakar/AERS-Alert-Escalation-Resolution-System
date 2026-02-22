@@ -4,7 +4,7 @@ metadata:
   name: aers-backend
   namespace: aers
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: aers-backend
@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: priyobrotokarmakar/alert-escalation-resolution-system-backend:latest
+        image: priyobrotokarmakar/alert-escalation-resolution-system-backend:k8s
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         resources:
@@ -28,3 +29,16 @@ spec:
         envFrom:
         - secretRef:
             name: aers-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aers-backend
+  namespace: aers
+spec:
+  type: LoadBalancer
+  selector:
+    app: aers-backend
+  ports:
+  - port: 8080
+    targetPort: 8080

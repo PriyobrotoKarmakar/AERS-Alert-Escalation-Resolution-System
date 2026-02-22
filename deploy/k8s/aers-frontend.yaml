@@ -6,7 +6,7 @@ metadata:
   labels:
     app: aers-frontend
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: aers-frontend
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: aers-frontend
-        image: priyobrotokarmakar/alert-escalation-resolution-system-frontend:latest
+        image: priyobrotokarmakar/alert-escalation-resolution-system-frontend:v5
         ports:
         - containerPort: 80
         resources:
@@ -30,3 +30,17 @@ spec:
         envFrom:
         - secretRef:
             name: aers-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aers-frontend
+  namespace: aers
+spec:
+  selector:
+    app: aers-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
