@@ -136,7 +136,8 @@ const Configuration = () => {
                         <span className="text-slate-500">Target Severity</span>
                         <Badge variant="destructive">{rules["Overspeeding"]?.target_severity || 'N/A'}</Badge>
                       </div>
-                    </CardContent>
+                    </div>
+                  </CardContent>
                   </Card>
                 )}
 
@@ -197,7 +198,8 @@ const Configuration = () => {
                         <span className="text-slate-500 flex items-center gap-1"><Clock className="h-3 w-3"/> Max Expiry Window</span>
                         <span className="font-medium">{rules["Compliance"]?.window_mins ? `${rules["Compliance"].window_mins / 1440} days` : "N/A"}</span>
                       </div>
-                    </CardContent>
+                    </div>
+                  </CardContent>
                   </Card>
                 )}
             </div>
