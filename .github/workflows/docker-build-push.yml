@@ -37,7 +37,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}
+          images: ${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-backend
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -76,7 +76,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}
+          images: ${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-frontend
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -93,8 +93,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VITE_API_URL=${{ secrets.VITE_API_URL || 'https://alert-escalation-resolution-system-backend-387860847580.asia-south1.run.app/api' }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-backend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-frontend:buildcache,mode=max
 
   summary:
     name: Deployment Summary
@@ -108,8 +108,8 @@ jobs:
           echo "## 🐳 Docker Build & Push Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Images Built:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Backend**: \`${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Frontend**: \`${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Backend**: \`${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-backend\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Frontend**: \`${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-frontend\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Tags:" >> $GITHUB_STEP_SUMMARY
           echo "- Branch: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
@@ -117,6 +117,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Pull Commands:" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
-          echo "docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}:${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-backend:${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-frontend:${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
