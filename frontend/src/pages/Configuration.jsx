@@ -48,31 +48,6 @@ const Configuration = () => {
   
 
 
-  const handleEditClick = (ruleName, ruleData) => {
-    setEditingRuleName(ruleName)
-    setEditForm({
-      escalate_if_count: ruleData.escalate_if_count || 0,
-      window_mins: ruleData.window_mins || 0,
-      target_severity: ruleData.target_severity || "",
-      auto_close_if: ruleData.auto_close_if || ""
-    })
-    setIsEditModalOpen(true)
-  }
-
-  const handleSaveRule = async () => {
-    setIsSaving(true)
-    try {
-      await updateRule(editingRuleName, editForm)
-      toast.success(`${editingRuleName} rule updated successfully!`)
-      fetchRules()
-      setIsEditModalOpen(false)
-    } catch (err) {
-      toast.error("Failed to update rule. Please try again.")
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
   if (error) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -161,7 +136,8 @@ const Configuration = () => {
                         <span className="text-slate-500">Target Severity</span>
                         <Badge variant="destructive">{rules["Overspeeding"]?.target_severity || 'N/A'}</Badge>
                       </div>
-                    </CardContent>
+                    </div>
+                  </CardContent>
                   </Card>
                 )}
 
@@ -222,7 +198,8 @@ const Configuration = () => {
                         <span className="text-slate-500 flex items-center gap-1"><Clock className="h-3 w-3"/> Max Expiry Window</span>
                         <span className="font-medium">{rules["Compliance"]?.window_mins ? `${rules["Compliance"].window_mins / 1440} days` : "N/A"}</span>
                       </div>
-                    </CardContent>
+                    </div>
+                  </CardContent>
                   </Card>
                 )}
             </div>
