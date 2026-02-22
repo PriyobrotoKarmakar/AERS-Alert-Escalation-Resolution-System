@@ -74,7 +74,7 @@ func main() {
 	// CORS configuration - allow Cloud Run frontend and localhost
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
-			"https://alert-escalation-resolution-system-frontend-387860847580.asia-south1.run.app",
+			"https://aers-alert-escalation-resolution-sy.vercel.app",
 			"http://localhost:5173",
 			"http://localhost:3000",
 			"http://127.0.0.1:5173",

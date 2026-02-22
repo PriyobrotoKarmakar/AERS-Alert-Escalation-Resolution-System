@@ -23,10 +23,17 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
  
+    // Check if the error is 401 logic
     if (error.response?.status === 401) {
-      toast.error("Session expired. Please login again.")
-      localStorage.removeItem('token')
-      window.location.href = '/login'
+      // Don't redirect if we're already on the login page or if it's a login attempt
+      const isLoginRequest = error.config.url.includes('/auth/login')
+      const isLoginPage = window.location.pathname === '/login'
+
+      if (!isLoginRequest && !isLoginPage) {
+        toast.error("Session expired. Please login again.")
+        localStorage.removeItem('token')
+        window.location.href = '/login'
+      }
     }
     
   
