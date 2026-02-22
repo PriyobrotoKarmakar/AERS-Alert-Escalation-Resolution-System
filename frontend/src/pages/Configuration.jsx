@@ -45,30 +45,8 @@ const Configuration = () => {
     }
   };
 
-  const handleEditClick = (ruleName, ruleData) => {
-    setEditingRuleName(ruleName);
-    setEditForm({
-      escalate_if_count: ruleData.escalate_if_count || 0,
-      window_mins: ruleData.window_mins || 0,
-      target_severity: ruleData.target_severity || "",
-      auto_close_if: ruleData.auto_close_if || "",
-    });
-    setIsEditModalOpen(true);
-  };
+  
 
-  const handleSaveRule = async () => {
-    setIsSaving(true);
-    try {
-      await updateRule(editingRuleName, editForm);
-      toast.success(`${editingRuleName} rule updated successfully!`);
-      fetchRules();
-      setIsEditModalOpen(false);
-    } catch (err) {
-      toast.error("Failed to update rule. Please try again.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
   const handleEditClick = (ruleName, ruleData) => {
     setEditingRuleName(ruleName)
