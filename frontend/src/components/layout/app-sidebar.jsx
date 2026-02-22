@@ -39,7 +39,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-bold text-slate-900 dark:text-white mb-2 mt-4 px-4 group-data-[collapsible=icon]:invisible">
-            MoveInSync Ops
+            AERS
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
