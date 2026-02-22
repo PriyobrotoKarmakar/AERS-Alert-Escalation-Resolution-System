@@ -1,0 +1,15 @@
+{
+  "Compliance": {
+    "auto_close_if": "document_valid"
+  },
+  "Negative Feedback": {
+    "escalate_if_count": 2,
+    "window_mins": 1440,
+    "target_severity": "Warning"
+  },
+  "Overspeeding": {
+    "escalate_if_count": 3,
+    "window_mins": 60,
+    "target_severity": "Critical"
+  }
+}
