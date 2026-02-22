@@ -7,6 +7,8 @@
 [![Tech Stack](https://img.shields.io/badge/Stack-Go%20%7C%20React%20%7C%20MongoDB-orange)]()
 
 ## 📋 Overview
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/cdfbb9e9-0406-4786-b617-0b15228e48c9" />
+
 
 AERS is a production-ready alert escalation and resolution system designed for fleet monitoring operations. It automatically processes incoming alerts from multiple sources (overspeeding, negative feedback, compliance violations), applies intelligent rule-based escalation, implements auto-closing for compliant behaviors, and provides real-time dashboards for operations teams.
 
