@@ -74,7 +74,7 @@ const Signup = () => {
               <Label htmlFor="name" className="text-zinc-700 dark:text-zinc-300">Full Name</Label>
               <Input 
                 id="name" 
-                placeholder="Priyobroto Karmakar" 
+                placeholder="John Doe" 
                 className="border-zinc-200 dark:border-zinc-800 focus-visible:ring-zinc-400"
                 value={formData.name}
                 onChange={handleInputChange}
