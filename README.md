@@ -557,6 +557,34 @@ docker-compose up --build
 - Backend API: `http://localhost:8080`
 - MongoDB: `localhost:27017`
 
+### CI/CD - Automated Docker Builds
+
+**GitHub Actions** automatically builds and pushes Docker images to Docker Hub on every push:
+
+**Setup Required Secrets:**
+```bash
+DOCKER_USERNAME   → Your Docker Hub username
+DOCKER_TOKEN      → Docker Hub access token
+VITE_API_URL      → Backend API URL
+```
+
+**Images Produced:**
+```bash
+# Pull latest images
+docker pull <your-username>/aers-backend:latest
+docker pull <your-username>/aers-frontend:latest
+
+# Pull specific branch
+docker pull <your-username>/aers-backend:feat-containerization
+```
+
+📖 **Complete Setup Guide:** See [.github/DOCKER_SETUP.md](.github/DOCKER_SETUP.md) for detailed instructions.
+
+**Workflow Triggers:**
+- ✅ Push to `main` → Tagged as `latest`
+- ✅ Push to `feat/**` → Tagged with branch name
+- ✅ Pull Requests → Build only (no push)
+
 ---
 
 ## 📂 Project Structure
