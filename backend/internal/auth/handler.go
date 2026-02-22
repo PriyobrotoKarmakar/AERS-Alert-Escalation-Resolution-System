@@ -36,7 +36,7 @@ func (h *Handler) HandleSignup(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input data"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input data: " + err.Error()})
 		return
 	}
 

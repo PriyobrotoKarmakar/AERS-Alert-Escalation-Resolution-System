@@ -71,14 +71,9 @@ func main() {
 
 	r := gin.Default()
 
-	// CORS configuration - allow Cloud Run frontend and localhost
+	// CORS configuration - allow all traffic for testing
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{
-			"https://aers-alert-escalation-resolution-sy.vercel.app",
-			"http://localhost:5173",
-			"http://localhost:3000",
-			"http://127.0.0.1:5173",
-		},
+		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept", "X-Requested-With"},
 		ExposeHeaders:    []string{"Content-Length"},

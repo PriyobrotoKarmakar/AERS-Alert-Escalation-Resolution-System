@@ -37,7 +37,7 @@ api.interceptors.response.use(
     }
     
   
-    const message = error.response?.data?.message || "A system error occurred. Please try again."
+    const message = error.response?.data?.error || error.response?.data?.message || "A system error occurred. Please try again."
     return Promise.reject({ ...error, message })
   }
 )
