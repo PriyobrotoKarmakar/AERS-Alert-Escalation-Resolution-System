@@ -23,6 +23,12 @@ func NewService(repo *Repository, jwtSecret string) *Service {
 }
 
 func (s *Service) Signup(ctx context.Context, name, email, password string) (string, error) {
+	// Check if user already exists
+	existingUser, _ := s.repo.GetUserByEmail(ctx, email)
+	if existingUser != nil {
+		return "", errors.New("user already exists")
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", errors.New("failed to hash password")

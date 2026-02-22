@@ -42,6 +42,10 @@ func (h *Handler) HandleSignup(c *gin.Context) {
 
 	token, err := h.service.Signup(c.Request.Context(), input.Name, input.Email, input.Password)
 	if err != nil {
+		if err.Error() == "user already exists" {
+			c.JSON(http.StatusConflict, gin.H{"error": "User with this email already exists"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create user"})
 		return
 	}
@@ -62,8 +66,16 @@ func (h *Handler) HandleLogin(c *gin.Context) {
 
 	token, err := h.service.Login(c.Request.Context(), input.Email, input.Password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
-		return
+		if err.Error() == "user not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User does not exist"})
+			return
+		} else if err.Error() == "invalid password" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Incorrect password"})
+			return
+		} else {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{"token": token})

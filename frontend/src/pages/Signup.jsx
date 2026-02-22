@@ -33,7 +33,17 @@ const Signup = () => {
       // Navigate to dashboard on success
       navigate("/dashboard")
     } catch (err) {
-      toast.error(err.message || "Signup failed. Please try again.")
+      if (err.response) {
+        if (err.response.status === 409) {
+           toast.error("User with this email already exists. Please login.")
+        } else if (err.response.status === 400) {
+           toast.error(err.response.data.error || "Invalid input data. Please check your details.")
+        } else {
+           toast.error(err.response.data.error || "Signup failed. Please try again later.")
+        }
+      } else {
+        toast.error("Network error. Please check your connection.")
+      }
       console.error("Signup error:", err)
     } finally {
       setIsLoading(false)
