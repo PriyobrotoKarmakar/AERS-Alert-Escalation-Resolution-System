@@ -26,12 +26,12 @@ const Configuration = () => {
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
-    fetchRules()
-  }, [])
+    fetchRules();
+  }, []);
 
   const fetchRules = async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
       const response = await getRulesConfig()
       // Handle null/undefined response
@@ -41,9 +41,34 @@ const Configuration = () => {
       setError(errorMessage)
       toast.error(errorMessage)
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  const handleEditClick = (ruleName, ruleData) => {
+    setEditingRuleName(ruleName);
+    setEditForm({
+      escalate_if_count: ruleData.escalate_if_count || 0,
+      window_mins: ruleData.window_mins || 0,
+      target_severity: ruleData.target_severity || "",
+      auto_close_if: ruleData.auto_close_if || "",
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveRule = async () => {
+    setIsSaving(true);
+    try {
+      await updateRule(editingRuleName, editForm);
+      toast.success(`${editingRuleName} rule updated successfully!`);
+      fetchRules();
+      setIsEditModalOpen(false);
+    } catch (err) {
+      toast.error("Failed to update rule. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleEditClick = (ruleName, ruleData) => {
     setEditingRuleName(ruleName)
@@ -76,9 +101,11 @@ const Configuration = () => {
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center justify-center py-10">
             <AlertCircleIcon className="h-12 w-12 text-red-500 mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Failed to Load Configuration</h3>
+            <h3 className="text-lg font-semibold mb-2">
+              Failed to Load Configuration
+            </h3>
             <p className="text-sm text-slate-500 text-center mb-4">{error}</p>
-            <button 
+            <button
               onClick={fetchRules}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
@@ -87,13 +114,15 @@ const Configuration = () => {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Rule Engine Configuration</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Rule Engine Configuration
+        </h2>
         <p className="text-slate-500 dark:text-slate-400">
           Manage dynamic escalation and auto-closure thresholds.
         </p>
@@ -104,7 +133,7 @@ const Configuration = () => {
           <TabsTrigger value="visual">Visual Overview</TabsTrigger>
           <TabsTrigger value="raw">Raw JSON</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="visual" className="space-y-4 mt-4">
           {loading ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -154,10 +183,9 @@ const Configuration = () => {
                         <span className="text-slate-500">Target Severity</span>
                         <Badge variant="destructive">{rules["Overspeeding"]?.target_severity || 'N/A'}</Badge>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                    </CardContent>
+                  </Card>
+                )}
 
               {rules["Negative Feedback"] && typeof rules["Negative Feedback"] === 'object' && (
                 <Card>
@@ -216,10 +244,9 @@ const Configuration = () => {
                         <span className="text-slate-500 flex items-center gap-1"><Clock className="h-3 w-3"/> Max Expiry Window</span>
                         <span className="font-medium">{rules["Compliance"]?.window_mins ? `${rules["Compliance"].window_mins / 1440} days` : "N/A"}</span>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                    </CardContent>
+                  </Card>
+                )}
             </div>
           ) : (
             <div className="text-center text-slate-500 py-8">
@@ -227,12 +254,14 @@ const Configuration = () => {
             </div>
           )}
         </TabsContent>
-        
+
         <TabsContent value="raw" className="mt-4">
           <Card>
             <CardHeader>
               <CardTitle>rules.json</CardTitle>
-              <CardDescription>The active configuration currently loaded in the backend memory.</CardDescription>
+              <CardDescription>
+                The active configuration currently loaded in the backend memory.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -316,7 +345,7 @@ const Configuration = () => {
         </DialogContent>
       </Dialog>
     </div>
-  )
-}
+  );
+};
 
-export default Configuration
+export default Configuration;
