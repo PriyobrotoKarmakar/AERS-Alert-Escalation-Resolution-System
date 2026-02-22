@@ -19,22 +19,12 @@ func NewRepository(db *mongo.Database) *Repository {
 	}
 }
 
-type AlertRepository struct {
-	collection *mongo.Collection
-}
-
-func NewAlertRepository(db *mongo.Database) *AlertRepository {
-	return &AlertRepository{
-		collection: db.Collection("alerts"),
-	}
-}
-
-func (r *AlertRepository) Create(ctx context.Context, alert *models.Alert) error {
+func (r *Repository) Create(ctx context.Context, alert *models.Alert) error {
 	_, err := r.collection.InsertOne(ctx, alert)
 	return err
 }
 
-func (r *AlertRepository) GetAll(ctx context.Context) ([]models.Alert, error) {
+func (r *Repository) GetAll(ctx context.Context) ([]models.Alert, error) {
 	var alerts []models.Alert
 
 	cursor, err := r.collection.Find(ctx, bson.M{})
@@ -46,14 +36,13 @@ func (r *AlertRepository) GetAll(ctx context.Context) ([]models.Alert, error) {
 	return alerts, err
 }
 
-func (r *AlertRepository) GetByID(ctx context.Context, alertID string) (*models.Alert, error) {
+func (r *Repository) GetByID(ctx context.Context, alertID string) (*models.Alert, error) {
 	var alert models.Alert
 	err := r.collection.FindOne(ctx, bson.M{"alertId": alertID}).Decode(&alert)
 	return &alert, err
 }
 
-func (r *AlertRepository) UpdateStatus(ctx context.Context, alertID string, status string) error {
-
+func (r *Repository) UpdateStatus(ctx context.Context, alertID string, status string) error {
 	historyEntry := models.HistoryEntry{
 		State: status,
 		Time:  time.Now(),
@@ -87,6 +76,12 @@ func getStatusNote(status string) string {
 func (r *Repository) AutoCloseExpiredAlerts(ctx context.Context, expiryWindow time.Duration) (int64, error) {
 	cutoffTime := time.Now().Add(-expiryWindow)
 
+	historyEntry := models.HistoryEntry{
+		State: models.StatusAutoClosed,
+		Time:  time.Now(),
+		Note:  "Auto-closed due to expiry window exceeded",
+	}
+
 	filter := bson.M{
 		"status":    bson.M{"$nin": []string{models.StatusResolved, models.StatusAutoClosed}},
 		"timestamp": bson.M{"$lte": cutoffTime},
@@ -95,6 +90,9 @@ func (r *Repository) AutoCloseExpiredAlerts(ctx context.Context, expiryWindow ti
 	update := bson.M{
 		"$set": bson.M{
 			"status": models.StatusAutoClosed,
+		},
+		"$push": bson.M{
+			"history": historyEntry,
 		},
 	}
 

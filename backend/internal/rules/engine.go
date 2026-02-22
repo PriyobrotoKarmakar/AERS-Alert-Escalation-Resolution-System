@@ -4,6 +4,7 @@ import (
 	"aers-backend/internal/models"
 	"encoding/json"
 	"os"
+	"strings"
 )
 
 type RuleConfig struct {
@@ -28,11 +29,26 @@ func (e *Engine) LoadRules(filePath string) error {
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(file, &e.Config)
+	
+	// Load rules into temporary map
+	tempConfig := make(map[string]RuleConfig)
+	if err := json.Unmarshal(file, &tempConfig); err != nil {
+		return err
+	}
+	
+	// Normalize keys to lowercase for case-insensitive lookup
+	for key, value := range tempConfig {
+		normalizedKey := strings.ToLower(strings.TrimSpace(key))
+		e.Config[normalizedKey] = value
+	}
+	
+	return nil
 }
 
 func (e *Engine) EvaluateEscalation(alert *models.Alert, recentCount int) {
-	rule, exists := e.Config[alert.SourceType]
+	// Normalize sourceType for case-insensitive lookup
+	normalizedSourceType := strings.ToLower(strings.TrimSpace(alert.SourceType))
+	rule, exists := e.Config[normalizedSourceType]
 	if !exists || rule.EscalateIfCount == 0 {
 		return
 	}
@@ -52,7 +68,9 @@ func (e *Engine) SaveRules(filePath string) error {
 }
 
 func (e *Engine) EvaluateAutoClose(alert *models.Alert) bool {
-	rule, exists := e.Config[alert.SourceType]
+	// Normalize sourceType for case-insensitive lookup
+	normalizedSourceType := strings.ToLower(strings.TrimSpace(alert.SourceType))
+	rule, exists := e.Config[normalizedSourceType]
 	if !exists || rule.AutoCloseIf == "" {
 		return false
 	}

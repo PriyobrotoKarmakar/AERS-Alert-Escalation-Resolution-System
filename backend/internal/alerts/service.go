@@ -2,6 +2,7 @@ package alerts
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"aers-backend/internal/models"
@@ -13,12 +14,12 @@ import (
 )
 
 type AlertService struct {
-	repo   *AlertRepository
+	repo   *Repository
 	engine *rules.Engine
 	cache  *cache.Cache
 }
 
-func NewAlertService(repo *AlertRepository, engine *rules.Engine, cache *cache.Cache) *AlertService {
+func NewAlertService(repo *Repository, engine *rules.Engine, cache *cache.Cache) *AlertService {
 	return &AlertService{
 		repo:   repo,
 		engine: engine,
@@ -49,8 +50,9 @@ func (s *AlertService) IngestAlert(ctx context.Context, alert models.Alert) (str
 			Note:  "Auto-closed due to compliance rule",
 		})
 	} else {
-		
-		rule, exists := s.engine.Config[alert.SourceType]
+		// Normalize sourceType for case-insensitive rule lookup
+		normalizedSourceType := strings.ToLower(strings.TrimSpace(alert.SourceType))
+		rule, exists := s.engine.Config[normalizedSourceType]
 
 		if exists && rule.WindowMins > 0 {
 			driverID := alert.Metadata["driverId"]

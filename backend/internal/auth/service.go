@@ -12,15 +12,22 @@ import (
 
 
 type Service struct {
-	repo *Repository
+	repo      *Repository
+	jwtSecret string
 }
 
-func NewService(repo *Repository) *Service {
-	return &Service{repo: repo}
+func NewService(repo *Repository, jwtSecret string) *Service {
+	return &Service{
+		repo:      repo,
+		jwtSecret: jwtSecret,
+	}
 }
 
 func (s *Service) Signup(ctx context.Context, name, email, password string) (string, error) {
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", errors.New("failed to hash password")
+	}
 
 	user := &models.User{
 		Name:     name,
@@ -37,11 +44,16 @@ func (s *Service) Signup(ctx context.Context, name, email, password string) (str
 }
 
 func (s *Service) generateToken(email string) (string, error) {
+	now := time.Now()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
-		"exp":   time.Now().Add(time.Hour * 24).Unix(),
+		"iss":   "aers-backend",           // Issuer
+		"aud":   "aers-frontend",          // Audience
+		"sub":   email,                    // Subject
+		"iat":   now.Unix(),               // Issued at
+		"exp":   now.Add(time.Hour * 24).Unix(), // Expiry (24 hours)
 	})
-	return token.SignedString([]byte("your_secret_zinc_key"))
+	return token.SignedString([]byte(s.jwtSecret))
 }
 
 func (s *Service) Login(ctx context.Context, email, password string) (string, error) {

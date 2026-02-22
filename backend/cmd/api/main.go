@@ -48,7 +48,15 @@ func main() {
 
 	mongoURI := os.Getenv("MONGODB_URI")
 	if mongoURI == "" {
-		log.Fatal("MONGO_URI not found in environment")
+		log.Fatal("MONGODB_URI not found in environment")
+	}
+
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("JWT_SECRET not found in environment. Please set a secure secret key.")
+	}
+	if len(jwtSecret) < 32 {
+		log.Fatal("JWT_SECRET must be at least 32 characters long for security")
 	}
 
 	client, database := db.ConnectMongo(mongoURI)
@@ -63,14 +71,19 @@ func main() {
 		AllowCredentials: true,
 	}))
 
+	// Set JWT secret for middleware
+	auth.SetJWTSecret(jwtSecret)
+	// Authenticated routes group  
+	authGroup := r.Group("/")  
+    authGroup.Use(auth.AuthMiddleware())  
 	//Auth
 	authRepo := auth.NewRepository(database)
-	authService := auth.NewService(authRepo)
+	authService := auth.NewService(authRepo, jwtSecret)
 	authHandler := auth.NewHandler(authService)
 	authHandler.RegisterRoutes(r)
 
 	// Alerts
-	alertRepo := alerts.NewAlertRepository(database)
+	alertRepo := alerts.NewRepository(database)
 	alertService := alerts.NewAlertService(alertRepo, ruleEngine, redisCache)
 	alertHandler := alerts.NewHandler(alertService)
 	alertHandler.RegisterRoutes(r)
@@ -83,7 +96,7 @@ func main() {
 
 	//Rules
 	rulesHandler := rules.NewHandler(ruleEngine)
-	rulesHandler.RegisterRoutes(r)
+	rulesHandler.RegisterRoutes(r, auth.AuthMiddleware())
 
 	r.GET("/api/health", func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)

@@ -7,6 +7,13 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// Global variable to store JWT secret (set once at startup)
+var jwtSecretKey string
+
+func SetJWTSecret(secret string) {
+	jwtSecretKey = secret
+}
+
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -28,7 +35,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		
 	
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return []byte("your_secret_zinc_key"), nil // Must match the secret in service.go
+			return []byte(jwtSecretKey), nil
 		})
 
 		if err != nil || !token.Valid {
@@ -37,8 +44,21 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-	
-		c.Set("email", claims["email"])
+		emailClaim, ok := claims["email"]
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Email claim missing"})
+			c.Abort()
+			return
+		}
+
+		email, ok := emailClaim.(string)
+		if !ok || strings.TrimSpace(email) == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email claim"})
+			c.Abort()
+			return
+		}
+
+		c.Set("email", email)
 		c.Next()
 	}
 }

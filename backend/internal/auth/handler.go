@@ -71,9 +71,19 @@ func (h *Handler) HandleLogin(c *gin.Context) {
 
 func (h *Handler) HandleGetMe(c *gin.Context) {
 
-	email, _ := c.Get("email")
+	email, exists := c.Get("email")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+		return
+	}
 
-	user, err := h.service.GetUser(c.Request.Context(), email.(string))
+	emailStr, ok := email.(string)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
+		return
+	}
+
+	user, err := h.service.GetUser(c.Request.Context(), emailStr)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
@@ -91,9 +101,19 @@ func (h *Handler) HandleGetMe(c *gin.Context) {
 
 // NEW: Refresh JWT Token
 func (h *Handler) HandleRefresh(c *gin.Context) {
-	email, _ := c.Get("email")
+	email, exists := c.Get("email")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+		return
+	}
 
-	newToken, err := h.service.RefreshToken(email.(string))
+	emailStr, ok := email.(string)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
+		return
+	}
+
+	newToken, err := h.service.RefreshToken(emailStr)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to refresh token"})
 		return
