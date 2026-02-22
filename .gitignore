@@ -21,7 +21,9 @@ obj/
 .flaskenv
 *.pem
 *.key
-
+.air.toml
+*.exe
+script.py
 # IDEs and Editors
 .vscode/
 !.vscode/extensions.json

@@ -1,5 +1,6 @@
-import { Link, useLocation } from "react-router-dom"
-import { LayoutDashboard, AlertCircle, Settings } from "lucide-react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { LayoutDashboard, AlertCircle, Settings, LogOut } from "lucide-react"
+import { toast } from "sonner"
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
 } from "@/components/ui/sidebar"
 
 const navItems = [
@@ -19,6 +21,18 @@ const navItems = [
 
 export function AppSidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    // Clear authentication token
+    localStorage.removeItem('token')
+    
+    // Show success toast
+    toast.success("Logged out successfully")
+    
+    // Redirect to login page
+    navigate('/login')
+  }
 
   return (
     <Sidebar collapsible="icon">
@@ -46,6 +60,17 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
+              <LogOut />
+              <span>Logout</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   )
 }
