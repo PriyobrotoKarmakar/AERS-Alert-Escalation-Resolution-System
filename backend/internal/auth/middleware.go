@@ -3,6 +3,7 @@ package auth
 import (
 	"net/http"
 	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -32,8 +33,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenString := parts[1]
 		claims := jwt.MapClaims{}
-		
-	
+
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(jwtSecretKey), nil
 		})

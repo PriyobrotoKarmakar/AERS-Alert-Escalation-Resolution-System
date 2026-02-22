@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,7 +60,6 @@ func (h *Handler) HandleLogin(c *gin.Context) {
 		return
 	}
 
-	
 	token, err := h.service.Login(c.Request.Context(), input.Email, input.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
@@ -88,7 +88,6 @@ func (h *Handler) HandleGetMe(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-
 
 	c.JSON(http.StatusOK, gin.H{
 		"user": gin.H{

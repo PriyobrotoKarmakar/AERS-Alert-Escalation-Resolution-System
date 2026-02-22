@@ -29,19 +29,19 @@ func (e *Engine) LoadRules(filePath string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	// Load rules into temporary map
 	tempConfig := make(map[string]RuleConfig)
 	if err := json.Unmarshal(file, &tempConfig); err != nil {
 		return err
 	}
-	
+
 	// Normalize keys to lowercase for case-insensitive lookup
 	for key, value := range tempConfig {
 		normalizedKey := strings.ToLower(strings.TrimSpace(key))
 		e.Config[normalizedKey] = value
 	}
-	
+
 	return nil
 }
 
@@ -75,7 +75,6 @@ func (e *Engine) EvaluateAutoClose(alert *models.Alert) bool {
 		return false
 	}
 
-	
 	if docStatus, ok := alert.Metadata["documentStatus"].(string); ok {
 		if docStatus == rule.AutoCloseIf {
 			return true

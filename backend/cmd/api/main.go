@@ -20,13 +20,12 @@ import (
 
 func main() {
 	godotenv.Load()
-	startTime := time.Now() 
+	startTime := time.Now()
 
 	ruleEngine := rules.NewEngine()
 	if err := ruleEngine.LoadRules("config/rules.json"); err != nil {
 		log.Fatalf("Failed to load rules: %v", err)
 	}
-
 
 	var redisCache *cache.Cache
 	redisAddr := os.Getenv("REDIS_ADDR")
@@ -73,9 +72,9 @@ func main() {
 
 	// Set JWT secret for middleware
 	auth.SetJWTSecret(jwtSecret)
-	// Authenticated routes group  
-	authGroup := r.Group("/")  
-    authGroup.Use(auth.AuthMiddleware())  
+	// Authenticated routes group
+	authGroup := r.Group("/")
+	authGroup.Use(auth.AuthMiddleware())
 	//Auth
 	authRepo := auth.NewRepository(database)
 	authService := auth.NewService(authRepo, jwtSecret)

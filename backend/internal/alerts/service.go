@@ -32,7 +32,6 @@ func (s *AlertService) IngestAlert(ctx context.Context, alert models.Alert) (str
 	alert.Status = models.StatusOpen
 	alert.Timestamp = time.Now()
 
-	
 	alert.History = []models.HistoryEntry{
 		{
 			State: models.StatusOpen,
@@ -43,7 +42,7 @@ func (s *AlertService) IngestAlert(ctx context.Context, alert models.Alert) (str
 
 	if s.engine.EvaluateAutoClose(&alert) {
 		alert.Status = models.StatusAutoClosed
-		
+
 		alert.History = append(alert.History, models.HistoryEntry{
 			State: models.StatusAutoClosed,
 			Time:  time.Now(),
@@ -68,7 +67,6 @@ func (s *AlertService) IngestAlert(ctx context.Context, alert models.Alert) (str
 				recentCount, _ := s.repo.collection.CountDocuments(ctx, filter)
 				s.engine.EvaluateEscalation(&alert, int(recentCount)+1)
 
-				
 				if alert.Status == models.StatusEscalated {
 					alert.History = append(alert.History, models.HistoryEntry{
 						State: models.StatusEscalated,

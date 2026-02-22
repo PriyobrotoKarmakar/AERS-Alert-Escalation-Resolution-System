@@ -17,13 +17,13 @@ func NewHandler(e *Engine) *Handler {
 
 func (h *Handler) RegisterRoutes(r *gin.Engine, authMiddleware ...gin.HandlerFunc) {
 	api := r.Group("/api/config")
-	
+
 	// Public read-only routes (for viewing current rules)
 	{
 		api.GET("/rules", h.HandleGetAllRules)
 		api.GET("/rules/:ruleName", h.HandleGetRule)
 	}
-	
+
 	// Protected mutation routes (require authentication)
 	if len(authMiddleware) > 0 {
 		protected := api.Group("/")

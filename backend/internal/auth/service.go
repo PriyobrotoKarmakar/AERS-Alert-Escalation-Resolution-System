@@ -10,7 +10,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-
 type Service struct {
 	repo      *Repository
 	jwtSecret string
@@ -47,10 +46,10 @@ func (s *Service) generateToken(email string) (string, error) {
 	now := time.Now()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
-		"iss":   "aers-backend",           // Issuer
-		"aud":   "aers-frontend",          // Audience
-		"sub":   email,                    // Subject
-		"iat":   now.Unix(),               // Issued at
+		"iss":   "aers-backend",                 // Issuer
+		"aud":   "aers-frontend",                // Audience
+		"sub":   email,                          // Subject
+		"iat":   now.Unix(),                     // Issued at
 		"exp":   now.Add(time.Hour * 24).Unix(), // Expiry (24 hours)
 	})
 	return token.SignedString([]byte(s.jwtSecret))
@@ -62,7 +61,6 @@ func (s *Service) Login(ctx context.Context, email, password string) (string, er
 		return "", errors.New("user not found")
 	}
 
-	
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		return "", errors.New("invalid password")
@@ -70,7 +68,6 @@ func (s *Service) Login(ctx context.Context, email, password string) (string, er
 
 	return s.generateToken(email)
 }
-
 
 func (s *Service) GetUser(ctx context.Context, email string) (*models.User, error) {
 	return s.repo.GetUserByEmail(ctx, email)
