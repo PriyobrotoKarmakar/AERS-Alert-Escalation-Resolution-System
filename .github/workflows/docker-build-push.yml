@@ -10,11 +10,6 @@ on:
     branches:
       - main
 
-env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  BACKEND_IMAGE_NAME: aers-backend
-  FRONTEND_IMAGE_NAME: aers-frontend
-
 jobs:
   build-and-push-backend:
     name: Build & Push Backend Image
@@ -52,8 +47,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-backend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-backend:buildcache,mode=max
 
   build-and-push-frontend:
     name: Build & Push Frontend Image
@@ -93,7 +88,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VITE_API_URL=${{ secrets.VITE_API_URL || 'https://alert-escalation-resolution-system-backend-387860847580.asia-south1.run.app/api' }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-backend:buildcache
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-frontend:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/alert-escalation-resolution-system-frontend:buildcache,mode=max
 
   summary:
