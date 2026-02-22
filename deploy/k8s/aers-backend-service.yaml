@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aers-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: aers-backend
+  ports:
+  - port: 8080
+    targetPort: 8080

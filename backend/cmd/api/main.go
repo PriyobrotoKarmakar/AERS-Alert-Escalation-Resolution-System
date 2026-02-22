@@ -19,13 +19,19 @@ import (
 )
 
 func main() {
-	godotenv.Load()
+	// Load .env file (ignore error in production)
+	_ = godotenv.Load()
 	startTime := time.Now()
 
+	// Log startup
+	log.Println("Starting AERS API Gateway...")
+
 	ruleEngine := rules.NewEngine()
+	log.Println("Loading rules from config/rules.json...")
 	if err := ruleEngine.LoadRules("config/rules.json"); err != nil {
 		log.Fatalf("Failed to load rules: %v", err)
 	}
+	log.Println("Rules loaded successfully")
 
 	var redisCache *cache.Cache
 	redisAddr := os.Getenv("REDIS_ADDR")
@@ -49,6 +55,7 @@ func main() {
 	if mongoURI == "" {
 		log.Fatal("MONGODB_URI not found in environment")
 	}
+	log.Println("Connecting to MongoDB...")
 
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
@@ -57,13 +64,21 @@ func main() {
 	if len(jwtSecret) < 32 {
 		log.Fatal("JWT_SECRET must be at least 32 characters long for security")
 	}
+	log.Println("JWT_SECRET validated")
 
 	client, database := db.ConnectMongo(mongoURI)
+	log.Println("MongoDB connected successfully")
 
 	r := gin.Default()
 
+	// CORS configuration - allow Cloud Run frontend and localhost
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000"},
+		AllowOrigins: []string{
+			"https://alert-escalation-resolution-system-frontend-387860847580.asia-south1.run.app",
+			"http://localhost:5173",
+			"http://localhost:3000",
+			"http://127.0.0.1:5173",
+		},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept", "X-Requested-With"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -128,6 +143,11 @@ func main() {
 		port = "8080"
 	}
 
-	log.Printf("AERS API Gateway running on port %s", port)
-	r.Run(":" + port)
+	log.Printf("AERS API Gateway starting on port %s", port)
+	log.Printf("Health check available at /api/health")
+
+	// Run server (binds to 0.0.0.0 by default)
+	if err := r.Run("0.0.0.0:" + port); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }
