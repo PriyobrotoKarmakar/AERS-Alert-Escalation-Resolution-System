@@ -1,30 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aers-backend
+  name: aers-frontend
   namespace: aers
+  labels:
+    app: aers-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aers-backend
+      app: aers-frontend
   template:
     metadata:
       labels:
-        app: aers-backend
+        app: aers-frontend
     spec:
       containers:
-      - name: backend
-        image: priyobrotokarmakar/alert-escalation-resolution-system-backend:latest
+      - name: aers-frontend
+        image: priyobrotokarmakar/alert-escalation-resolution-system-frontend:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         resources:
           requests:
-            cpu: "50m"
             memory: "64Mi"
+            cpu: "250m"
           limits:
-            cpu: "200m"
             memory: "128Mi"
+            cpu: "500m"
         envFrom:
         - secretRef:
             name: aers-secrets

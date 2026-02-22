@@ -63,7 +63,7 @@ env/
 .tox/
 .coverage
 htmlcov/
-
+secrets.yaml
 # Testing
 coverage/
 .nyc_output/

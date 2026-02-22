@@ -71,9 +71,13 @@ func main() {
 
 	r := gin.Default()
 
-	// CORS configuration - allow all traffic for testing
+	// CORS configuration
 	r.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,
+		AllowOrigins: []string{
+			"https://aers-alert-escalation-resolution-sy.vercel.app", // Production Frontend
+			"http://localhost:5173",                                  // Local Vite
+			"http://localhost:3000",                                  // Local React
+		},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept", "X-Requested-With"},
 		ExposeHeaders:    []string{"Content-Length"},

@@ -38,14 +38,7 @@ func NewRepository(db *mongo.Database) *Repository {
 
 func (r *Repository) CreateUser(ctx context.Context, user *models.User) error {
 	_, err := r.collection.InsertOne(ctx, user)
-	if err != nil {
-		// Check for MongoDB duplicate key error (code 11000)
-		if mongo.IsDuplicateKeyError(err) {
-			return mongo.ErrDuplicateKey
-		}
-		return err
-	}
-	return nil
+	return err
 }
 
 func (r *Repository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {

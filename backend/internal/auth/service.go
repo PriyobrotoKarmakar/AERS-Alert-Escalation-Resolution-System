@@ -44,7 +44,7 @@ func (s *Service) Signup(ctx context.Context, name, email, password string) (str
 	err = s.repo.CreateUser(ctx, user)
 	if err != nil {
 		// Handle duplicate key error from database
-		if errors.Is(err, mongo.ErrDuplicateKey) {
+		if mongo.IsDuplicateKeyError(err) {
 			return "", errors.New("user with this email already exists")
 		}
 		return "", err
