@@ -21,8 +21,8 @@ obj/
 .flaskenv
 *.pem
 *.key
-*.exe
 .air.toml
+*.exe
 script.py
 # IDEs and Editors
 .vscode/
