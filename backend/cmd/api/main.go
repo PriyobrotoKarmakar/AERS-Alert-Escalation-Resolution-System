@@ -19,19 +19,16 @@ import (
 )
 
 func main() {
-	// Load .env file (ignore error in production)
+
 	_ = godotenv.Load()
 	startTime := time.Now()
 
-	// Log startup
-	log.Println("Starting AERS API Gateway...")
-
+	//rules
 	ruleEngine := rules.NewEngine()
-	log.Println("Loading rules from config/rules.json...")
 	if err := ruleEngine.LoadRules("config/rules.json"); err != nil {
 		log.Fatalf("Failed to load rules: %v", err)
 	}
-	log.Println("Rules loaded successfully")
+	
 
 	var redisCache *cache.Cache
 	redisAddr := os.Getenv("REDIS_ADDR")
@@ -55,7 +52,6 @@ func main() {
 	if mongoURI == "" {
 		log.Fatal("MONGODB_URI not found in environment")
 	}
-	log.Println("Connecting to MongoDB...")
 
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
@@ -74,9 +70,9 @@ func main() {
 	// CORS configuration
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
-			"https://aers-alert-escalation-resolution-sy.vercel.app", // Production Frontend
-			"http://localhost:5173",                                  // Local Vite
-			"http://localhost:3000",                                  // Local React
+			"https://aers-alert-escalation-resolution-sy.vercel.app", 
+			"http://localhost:5173",                                  
+			"http://localhost:3000",                                  
 		},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept", "X-Requested-With"},
@@ -84,11 +80,11 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	// Set JWT secret for middleware
+
 	auth.SetJWTSecret(jwtSecret)
-	// Authenticated routes group
 	authGroup := r.Group("/")
 	authGroup.Use(auth.AuthMiddleware())
+
 	//Auth
 	authRepo := auth.NewRepository(database)
 	authService := auth.NewService(authRepo, jwtSecret)
@@ -143,9 +139,8 @@ func main() {
 	}
 
 	log.Printf("AERS API Gateway starting on port %s", port)
-	log.Printf("Health check available at /api/health")
 
-	// Run server (binds to 0.0.0.0 by default)
+
 	if err := r.Run("0.0.0.0:" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}

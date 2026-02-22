@@ -25,28 +25,21 @@ const Login = () => {
 
     try {
       const response = await login(formData)
-      // Store token from response
       if (response.data.token) {
         localStorage.setItem('token', response.data.token)
       }
       toast.success("Login successful! Welcome back.")
-      // Navigate to dashboard on success
       navigate("/dashboard")
     } catch (err) {
-      // Safe check for response object
       if (err.response) {
         if (err.response.status === 401) {
-           // Backend returns 401 for invalid password (we set "Incorrect password" in backend)
            toast.error("Incorrect password. Please try again.")
         } else if (err.response.status === 404) {
-           // Backend returns 404 for user not found
            toast.error("User with this email does not exist. Please sign up.")
         } else {
-           // Fallback for other server errors
            toast.error(err.response.data?.error || "Login failed. Please try again later.")
         }
       } else {
-         // Network errors (no response from server)
          toast.error("Network error. Unable to connect to server.")
       }
       console.error("Login error full object:", err)

@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// Global variable to store JWT secret (set once at startup)
+
 var jwtSecretKey string
 
 func SetJWTSecret(secret string) {

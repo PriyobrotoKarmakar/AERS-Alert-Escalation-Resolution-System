@@ -323,7 +323,7 @@ const Dashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Driver Detail Dialog */}
+   
       <Dialog open={isDriverDialogOpen} onOpenChange={setIsDriverDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh]">
           <DialogHeader>

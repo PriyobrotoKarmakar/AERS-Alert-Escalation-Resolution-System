@@ -25,12 +25,10 @@ const Signup = () => {
 
     try {
       const response = await signup(formData)
-      // Store token from response
       if (response.data.token) {
         localStorage.setItem('token', response.data.token)
       }
       toast.success("Account created successfully! Welcome aboard.")
-      // Navigate to dashboard on success
       navigate("/dashboard")
     } catch (err) {
       if (err.response) {
