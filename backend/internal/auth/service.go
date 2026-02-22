@@ -24,7 +24,7 @@ func NewService(repo *Repository, jwtSecret string) *Service {
 }
 
 func (s *Service) Signup(ctx context.Context, name, email, password string) (string, error) {
-	// Check if user already exists
+
 	existingUser, _ := s.repo.GetUserByEmail(ctx, email)
 	if existingUser != nil {
 		return "", errors.New("user already exists")
@@ -43,7 +43,7 @@ func (s *Service) Signup(ctx context.Context, name, email, password string) (str
 
 	err = s.repo.CreateUser(ctx, user)
 	if err != nil {
-		// Handle duplicate key error from database
+
 		if mongo.IsDuplicateKeyError(err) {
 			return "", errors.New("user with this email already exists")
 		}

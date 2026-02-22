@@ -24,13 +24,8 @@ export function AppSidebar() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    // Clear authentication token
     localStorage.removeItem('token')
-    
-    // Show success toast
     toast.success("Logged out successfully")
-    
-    // Redirect to login page
     navigate('/login')
   }
 

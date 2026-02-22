@@ -17,7 +17,7 @@ type Repository struct {
 func NewRepository(db *mongo.Database) *Repository {
 	collection := db.Collection("users")
 
-	// Create unique index on email field to prevent duplicate accounts
+
 	indexModel := mongo.IndexModel{
 		Keys:    bson.D{{Key: "email", Value: 1}},
 		Options: options.Index().SetUnique(true),

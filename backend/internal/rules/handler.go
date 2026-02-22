@@ -18,13 +18,13 @@ func NewHandler(e *Engine) *Handler {
 func (h *Handler) RegisterRoutes(r *gin.Engine, authMiddleware ...gin.HandlerFunc) {
 	api := r.Group("/api/config")
 
-	// Public read-only routes (for viewing current rules)
+
 	{
 		api.GET("/rules", h.HandleGetAllRules)
 		api.GET("/rules/:ruleName", h.HandleGetRule)
 	}
 
-	// Protected mutation routes (require authentication)
+
 	if len(authMiddleware) > 0 {
 		protected := api.Group("/")
 		protected.Use(authMiddleware...)
@@ -33,7 +33,7 @@ func (h *Handler) RegisterRoutes(r *gin.Engine, authMiddleware ...gin.HandlerFun
 			protected.POST("/rules/reload", h.HandleReloadRules)
 		}
 	} else {
-		// Fallback: no auth provided (should log warning in production)
+		
 		api.PUT("/rules/:ruleName", h.HandleUpdateRule)
 		api.POST("/rules/reload", h.HandleReloadRules)
 	}
@@ -45,7 +45,7 @@ func (h *Handler) HandleGetAllRules(c *gin.Context) {
 
 func (h *Handler) HandleGetRule(c *gin.Context) {
 	ruleName := c.Param("ruleName")
-	// Normalize ruleName for case-insensitive lookup
+	
 	normalizedRuleName := strings.ToLower(strings.TrimSpace(ruleName))
 	rule, exists := h.engine.Config[normalizedRuleName]
 	if !exists {
@@ -57,7 +57,7 @@ func (h *Handler) HandleGetRule(c *gin.Context) {
 
 func (h *Handler) HandleUpdateRule(c *gin.Context) {
 	ruleName := c.Param("ruleName")
-	// Normalize ruleName for case-insensitive storage
+	
 	normalizedRuleName := strings.ToLower(strings.TrimSpace(ruleName))
 	var newRule RuleConfig
 	if err := c.ShouldBindJSON(&newRule); err != nil {

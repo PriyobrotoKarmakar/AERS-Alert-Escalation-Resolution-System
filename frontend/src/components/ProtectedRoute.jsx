@@ -17,11 +17,9 @@ const ProtectedRoute = ({ children }) => {
       }
 
       try {
-        // Verify token is valid by making an API call
         await getCurrentUser()
         setIsAuthenticated(true)
       } catch (error) {
-        // Token is invalid or expired
         localStorage.removeItem('token')
         setIsAuthenticated(false)
       } finally {
@@ -32,7 +30,6 @@ const ProtectedRoute = ({ children }) => {
     checkAuth()
   }, [])
 
-  // Show loading state while checking authentication
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
@@ -44,12 +41,10 @@ const ProtectedRoute = ({ children }) => {
     )
   }
 
-  // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
-  // Render protected content
   return children
 }
 

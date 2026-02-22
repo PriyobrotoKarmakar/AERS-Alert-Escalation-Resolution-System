@@ -34,7 +34,7 @@ const Configuration = () => {
     setError(null);
     try {
       const response = await getRulesConfig()
-      // Handle null/undefined response
+   
       setRules(response?.data && typeof response.data === 'object' ? response.data : null)
     } catch (err) {
       const errorMessage = err.message || "Failed to fetch rules configuration"

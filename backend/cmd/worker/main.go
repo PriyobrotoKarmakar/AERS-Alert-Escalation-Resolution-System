@@ -37,9 +37,9 @@ func main() {
 	closedCount, err := repo.AutoCloseExpiredAlerts(ctx, expiryWindow)
 	cancel()
 	if err != nil {
-		log.Printf("❌ Initial scan error: %v", err)
+		log.Printf("Initial scan error: %v", err)
 	} else {
-		log.Printf("✅ Initial scan complete: %d alerts auto-closed", closedCount)
+		log.Printf("nitial scan complete: %d alerts auto-closed", closedCount)
 	}
 
 	ticker := time.NewTicker(scanInterval)
@@ -56,14 +56,14 @@ func main() {
 			cancel()
 
 			if err != nil {
-				log.Printf("❌ Error auto-closing alerts: %v", err)
+				log.Printf("Error auto-closing alerts: %v", err)
 			} else if closedCount > 0 {
-				log.Printf("✅ Auto-closed %d alerts", closedCount)
+				log.Printf("Auto-closed %d alerts", closedCount)
 			} else {
 				log.Printf("✓ Scan complete: No alerts to auto-close")
 			}
 		case sig := <-sigChan:
-			log.Printf("⚠️  Received signal %v, shutting down worker safely", sig)
+			log.Printf("Received signal %v, shutting down worker safely", sig)
 			return
 		}
 	}

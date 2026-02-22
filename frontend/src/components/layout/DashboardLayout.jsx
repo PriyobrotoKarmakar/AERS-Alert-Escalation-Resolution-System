@@ -42,7 +42,7 @@ const DashboardLayout = () => {
       toast.success('Logged out successfully')
       navigate('/login')
     } catch (error) {
-      // Even if API call fails, clear token and redirect
+
       localStorage.removeItem('token')
       navigate('/login')
     }

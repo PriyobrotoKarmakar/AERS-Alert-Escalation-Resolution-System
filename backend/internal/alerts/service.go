@@ -49,7 +49,7 @@ func (s *AlertService) IngestAlert(ctx context.Context, alert models.Alert) (str
 			Note:  "Auto-closed due to compliance rule",
 		})
 	} else {
-		// Normalize sourceType for case-insensitive rule lookup
+	
 		normalizedSourceType := strings.ToLower(strings.TrimSpace(alert.SourceType))
 		rule, exists := s.engine.Config[normalizedSourceType]
 
@@ -97,9 +97,9 @@ func (s *AlertService) ResolveAlert(ctx context.Context, alertID string) error {
 	return err
 }
 
-// Helper to clear all dashboard-related keys
+
 func (s *AlertService) invalidateDashboardCache(ctx context.Context) {
-	// Only invalidate if cache is available
+
 	if s.cache == nil {
 		return
 	}

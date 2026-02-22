@@ -41,14 +41,14 @@ const Alerts = () => {
     setError(null);
     try {
       const response = await getAlerts();
-      // Handle null/undefined response with default empty array
+
       const alertsData = Array.isArray(response?.data) ? response.data : [];
       
-      // Sort alerts by timestamp, newest first
+ 
       const sortedAlerts = alertsData.sort((a, b) => {
         const timeA = new Date(a?.timestamp || 0).getTime();
         const timeB = new Date(b?.timestamp || 0).getTime();
-        return timeB - timeA; // Descending order (newest first)
+        return timeB - timeA;
       });
       
       setAlerts(sortedAlerts);
@@ -77,7 +77,7 @@ const openAlertDetails = async (alert) => {
         driverId: data.metadata?.driverId || "N/A",
         vehicle: data.metadata?.vehicle || "N/A",
         eventCount: data.metadata?.speed ? `Speed: ${data.metadata.speed}` : "1",
-        // Use history from backend if available, otherwise create a basic one
+     
         history: data.history && data.history.length > 0 ? data.history : [
           {
             state: data.status || "OPEN",
@@ -92,7 +92,7 @@ const openAlertDetails = async (alert) => {
     } catch (err) {
       console.error("Failed to fetch alert details:", err);
       
-      // Fallback to basic alert data
+     
       setSelectedAlert({
         ...alert,
         id: alert?.id || alert?.alertId || 'Unknown',
@@ -113,7 +113,7 @@ const openAlertDetails = async (alert) => {
     setResolving(true);
     try {
       await resolveAlertManual(selectedAlert.id || selectedAlert.alertId);
-      // Update local state
+    
       setAlerts(
         alerts.map((a) =>
           (a.id || a.alertId) === (selectedAlert.id || selectedAlert.alertId)

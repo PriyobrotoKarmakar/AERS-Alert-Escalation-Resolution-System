@@ -30,13 +30,13 @@ func (e *Engine) LoadRules(filePath string) error {
 		return err
 	}
 
-	// Load rules into temporary map
+	
 	tempConfig := make(map[string]RuleConfig)
 	if err := json.Unmarshal(file, &tempConfig); err != nil {
 		return err
 	}
 
-	// Normalize keys to lowercase for case-insensitive lookup
+
 	for key, value := range tempConfig {
 		normalizedKey := strings.ToLower(strings.TrimSpace(key))
 		e.Config[normalizedKey] = value
@@ -46,7 +46,7 @@ func (e *Engine) LoadRules(filePath string) error {
 }
 
 func (e *Engine) EvaluateEscalation(alert *models.Alert, recentCount int) {
-	// Normalize sourceType for case-insensitive lookup
+
 	normalizedSourceType := strings.ToLower(strings.TrimSpace(alert.SourceType))
 	rule, exists := e.Config[normalizedSourceType]
 	if !exists || rule.EscalateIfCount == 0 {
@@ -68,7 +68,7 @@ func (e *Engine) SaveRules(filePath string) error {
 }
 
 func (e *Engine) EvaluateAutoClose(alert *models.Alert) bool {
-	// Normalize sourceType for case-insensitive lookup
+
 	normalizedSourceType := strings.ToLower(strings.TrimSpace(alert.SourceType))
 	rule, exists := e.Config[normalizedSourceType]
 	if !exists || rule.AutoCloseIf == "" {
