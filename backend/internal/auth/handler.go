@@ -42,7 +42,8 @@ func (h *Handler) HandleSignup(c *gin.Context) {
 
 	token, err := h.service.Signup(c.Request.Context(), input.Name, input.Email, input.Password)
 	if err != nil {
-		if err.Error() == "user already exists" {
+		errMsg := err.Error()
+		if errMsg == "user already exists" || errMsg == "user with this email already exists" {
 			c.JSON(http.StatusConflict, gin.H{"error": "User with this email already exists"})
 			return
 		}
