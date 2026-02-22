@@ -45,6 +45,31 @@ const Configuration = () => {
     }
   };
 
+  const handleEditClick = (ruleName, ruleData) => {
+    setEditingRuleName(ruleName);
+    setEditForm({
+      escalate_if_count: ruleData.escalate_if_count || 0,
+      window_mins: ruleData.window_mins || 0,
+      target_severity: ruleData.target_severity || "",
+      auto_close_if: ruleData.auto_close_if || "",
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveRule = async () => {
+    setIsSaving(true);
+    try {
+      await updateRule(editingRuleName, editForm);
+      toast.success(`${editingRuleName} rule updated successfully!`);
+      fetchRules();
+      setIsEditModalOpen(false);
+    } catch (err) {
+      toast.error("Failed to update rule. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   
 
 
@@ -108,7 +133,7 @@ const Configuration = () => {
             </div>
           ) : rules && typeof rules === 'object' && Object.keys(rules).length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {rules["Overspeeding"] && typeof rules["Overspeeding"] === 'object' && (
+              {rules["overspeeding"] && typeof rules["overspeeding"] === 'object' && (
                 <Card>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
@@ -116,7 +141,7 @@ const Configuration = () => {
                         <AlertTriangle className="h-5 w-5 text-red-500" />
                         Overspeeding
                       </CardTitle>
-                      <Button variant="ghost" size="icon" onClick={() => handleEditClick("Overspeeding", rules["Overspeeding"])}>
+                      <Button variant="ghost" size="icon" onClick={() => handleEditClick("overspeeding", rules["overspeeding"])}>
                         <Edit2 className="h-4 w-4 text-slate-500" />
                       </Button>
                     </div>
@@ -126,22 +151,22 @@ const Configuration = () => {
                     <div className="space-y-3 mt-4">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Threshold Count</span>
-                        <span className="font-medium">{rules["Overspeeding"]?.escalate_if_count || 0} alerts</span>
+                        <span className="font-medium">{rules["overspeeding"]?.escalate_if_count || 0} alerts</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500 flex items-center gap-1"><Clock className="h-3 w-3"/> Time Window</span>
-                        <span className="font-medium">{rules["Overspeeding"]?.window_mins || 0} mins</span>
+                        <span className="font-medium">{rules["overspeeding"]?.window_mins || 0} mins</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Target Severity</span>
-                        <Badge variant="destructive">{rules["Overspeeding"]?.target_severity || 'N/A'}</Badge>
+                        <Badge variant="destructive">{rules["overspeeding"]?.target_severity || 'N/A'}</Badge>
                       </div>
                     </div>
                   </CardContent>
                   </Card>
                 )}
 
-              {rules["Negative Feedback"] && typeof rules["Negative Feedback"] === 'object' && (
+              {rules["negative feedback"] && typeof rules["negative feedback"] === 'object' && (
                 <Card>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
@@ -149,7 +174,7 @@ const Configuration = () => {
                         <Settings2 className="h-5 w-5 text-amber-500" />
                         Negative Feedback
                       </CardTitle>
-                      <Button variant="ghost" size="icon" onClick={() => handleEditClick("Negative Feedback", rules["Negative Feedback"])}>
+                      <Button variant="ghost" size="icon" onClick={() => handleEditClick("negative feedback", rules["negative feedback"])}>
                         <Edit2 className="h-4 w-4 text-slate-500" />
                       </Button>
                     </div>
@@ -159,22 +184,22 @@ const Configuration = () => {
                     <div className="space-y-3 mt-4">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Threshold Count</span>
-                        <span className="font-medium">{rules["Negative Feedback"]?.escalate_if_count || 0} alerts</span>
+                        <span className="font-medium">{rules["negative feedback"]?.escalate_if_count || 0} alerts</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500 flex items-center gap-1"><Clock className="h-3 w-3"/> Time Window</span>
-                        <span className="font-medium">{rules["Negative Feedback"]?.window_mins ? (rules["Negative Feedback"].window_mins / 60) : 0} hours</span>
+                        <span className="font-medium">{rules["negative feedback"]?.window_mins ? (rules["negative feedback"].window_mins / 60) : 0} hours</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Target Severity</span>
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-800 hover:bg-amber-100">{rules["Negative Feedback"]?.target_severity || 'N/A'}</Badge>
+                        <Badge variant="secondary" className="bg-amber-100 text-amber-800 hover:bg-amber-100">{rules["negative feedback"]?.target_severity || 'N/A'}</Badge>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               )}
 
-              {rules["Compliance"] && typeof rules["Compliance"] === 'object' && (
+              {rules["compliance"] && typeof rules["compliance"] === 'object' && (
                 <Card>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
@@ -182,7 +207,7 @@ const Configuration = () => {
                         <CheckCircle className="h-5 w-5 text-green-500" />
                         Compliance
                       </CardTitle>
-                      <Button variant="ghost" size="icon" onClick={() => handleEditClick("Compliance", rules["Compliance"])}>
+                      <Button variant="ghost" size="icon" onClick={() => handleEditClick("compliance", rules["compliance"])}>
                         <Edit2 className="h-4 w-4 text-slate-500" />
                       </Button>
                     </div>
@@ -192,11 +217,11 @@ const Configuration = () => {
                     <div className="space-y-3 mt-4">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500">Condition</span>
-                        <span className="font-medium">{rules["Compliance"]?.auto_close_if || 'N/A'}</span>
+                        <span className="font-medium">{rules["compliance"]?.auto_close_if || 'N/A'}</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-slate-500 flex items-center gap-1"><Clock className="h-3 w-3"/> Max Expiry Window</span>
-                        <span className="font-medium">{rules["Compliance"]?.window_mins ? `${rules["Compliance"].window_mins / 1440} days` : "N/A"}</span>
+                        <span className="font-medium">{rules["compliance"]?.window_mins ? `${rules["compliance"].window_mins / 1440} days` : "N/A"}</span>
                       </div>
                     </div>
                   </CardContent>
