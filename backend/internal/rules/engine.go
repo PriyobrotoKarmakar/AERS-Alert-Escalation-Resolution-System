@@ -30,12 +30,10 @@ func (e *Engine) LoadRules(filePath string) error {
 		return err
 	}
 
-	
 	tempConfig := make(map[string]RuleConfig)
 	if err := json.Unmarshal(file, &tempConfig); err != nil {
 		return err
 	}
-
 
 	for key, value := range tempConfig {
 		normalizedKey := strings.ToLower(strings.TrimSpace(key))
@@ -74,6 +72,12 @@ func (e *Engine) EvaluateAutoClose(alert *models.Alert) bool {
 	if !exists || rule.AutoCloseIf == "" {
 		return false
 	}
+
+	
+	if boolVal, ok := alert.Metadata[rule.AutoCloseIf].(bool); ok {
+		return boolVal 
+	}
+
 
 	if docStatus, ok := alert.Metadata["documentStatus"].(string); ok {
 		if docStatus == rule.AutoCloseIf {

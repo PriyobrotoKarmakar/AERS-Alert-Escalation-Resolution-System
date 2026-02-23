@@ -23,9 +23,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
  
-    // Check if the error is 401 logic
+    
     if (error.response?.status === 401) {
-      // Don't redirect if we're already on the login page or if it's a login attempt
+     
       const isLoginRequest = error.config.url.includes('/auth/login')
       const isLoginPage = window.location.pathname === '/login'
 
