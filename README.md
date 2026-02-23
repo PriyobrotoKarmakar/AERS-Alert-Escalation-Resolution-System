@@ -26,6 +26,9 @@ AERS is a production-ready alert escalation and resolution system designed for f
 | **Backend API** | [alert-escalation-resolution-system-backend...run.app](https://alert-escalation-resolution-system-backend-387860847580.asia-south1.run.app) | ✅ Live |
 
 ---
+<img width="1839" height="1056" alt="image" src="https://github.com/user-attachments/assets/938406e7-a211-4e22-ba11-bcaff49dc7a1" />
+<img width="784" height="951" alt="image" src="https://github.com/user-attachments/assets/e708db78-9d93-4c49-9ee5-31438cedc967" />
+
 
 ## ✨ Key Features
 
