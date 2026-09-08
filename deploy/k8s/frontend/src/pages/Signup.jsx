@@ -85,7 +85,7 @@ const Signup = () => {
               <Input 
                 id="email" 
                 type="email" 
-                placeholder="admin@moveinsync.com" 
+                placeholder="admin@gmail.com" 
                 className="border-zinc-200 dark:border-zinc-800 focus-visible:ring-zinc-400"
                 value={formData.email}
                 onChange={handleInputChange}
